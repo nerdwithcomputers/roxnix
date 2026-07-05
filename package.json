@@ -1,0 +1,15 @@
+{
+  "name": "roxnix",
+  "version": "1.0.0",
+  "description": "dnd terminal puzzle/unix \"emulator\"",
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "neo-neo-blessed": "^0.7.1"
+  }
+}
