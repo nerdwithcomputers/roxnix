@@ -62,6 +62,9 @@ var inputGo = blessed.button({
     }
   }
 });
+inputAssembly.submit(()=>{
+  out.pushItem(">" + inputBox.data);
+});
 
 screen.append(inputAssembly);
 
@@ -74,7 +77,8 @@ var out = blessed.list({
     type: 'line'
   },
   items:[
-    "hello there"
+    "ROXNIX 0.1 BOOTED",
+    "sh-boom"
   ]
 });
 screen.append(out);
