@@ -1,84 +1,88 @@
-var blessed = require('neo-neo-blessed');
+const blessed = require('neo-neo-blessed');
+// try {
+const command = require('./commands.js');
+// } catch(error){
+  // console.error(error);
+// }
+var system = "dArnet";
+var cwd = "home";
+var fullPath = `systems/${system}/${cwd}`;
 
+var style = {
+  fg: 'green',
+  bg: 'black',
+  focus:{
+    border:{
+      fg: 'yellow',
+      bg: 'black'
+    }
+  },
+  border:{
+    fg:'green',
+    bg:'black'
+  }
+};
 var screen = blessed.screen({
   smartCSR: true,
   dockBorders: true,
-  ignoreLocked: ['C-c', 'M-q']
+  ignoreLocked: ['M-q']
 });
-screen.key(['escape','M-c'], (ch,key)=>{
+screen.key(['escape','M-q'], (ch,key)=>{
+  screen.destroy();
   return process.exit(0);
 });
 
-var inputAssembly = blessed.form({
-  bottom: 3,
-  left: 1,
-  width: '50%',
-  height: 4,
-  mouse: true,
-  keys: true,
-});
-
-var inputBox = blessed.Textbox({
-  parent: inputAssembly,
+var workingDir = blessed.box({
+  parent: screen,
   top: 0,
-  height: 3,
-  width: '100%-6',
-  inputOnFocus: true,
-  mouse: true,
-  keys: true,
-  content: ">",
+  right: 1,
+  width: '45%',
+  height: '100%',
+  scrollable: true,
   border:{
     type: 'line'
   },
-  style: {
-    fg: 'green',
-    bg: 'black',
-    border:{
-      fg: 'yellow'
-    },
-  }
+  style: style
 });
-var inputGo = blessed.button({
-  parent: inputAssembly,
-  content: 'GO',
-  top: 0,
-  right: 0,
-  width: 6,
+
+var inputBox = blessed.Textbox({
+  parent: screen,
+  bottom: 0,
+  left: 1,
   height: 3,
-  border: {
+  width: '50%',
+  inputOnFocus: true,
+  scrollable: true,
+  mouse: true,
+  keys: true,
+  border:{
     type: 'line'
   },
-  padding:{
-    left: 1
-  },
-  style:{
-    fg: 'green',
-    bg: 'black',
-    border: {
-      fg: 'yellow'
-    },
-    hover: {
-      bg: 'red'
+  style: style
+});
+inputBox.on("submit", ()=>{
+  if(inputBox.value.length > 0){
+    out.pushItem(cwd + "/> " + inputBox.value);
+    for(let command of inputBox.value.split('&&')){
+      out.pushItem(command.parseCommand(inputBox.value, system, cwd));
     }
-  }
+    inputBox.clearValue();
+    screen.render();
+  };
+  inputBox.readInput();
 });
-inputAssembly.submit(()=>{
-  out.pushItem(">" + inputBox.data);
-});
-
-screen.append(inputAssembly);
 
 var out = blessed.list({
-  top: 3,
+  top: 1,
   left: 1,
   width: '50%',
-  height: '70%',
+  height: '100%-4',
+  style: style,
   border:{
     type: 'line'
   },
   items:[
-    "ROXNIX 0.1 BOOTED",
-    "sh-boom"
+    "ROXNIX 0.1 BOOTED"
   ]
 });
 screen.append(out);
